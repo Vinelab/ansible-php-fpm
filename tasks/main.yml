@@ -1,0 +1,67 @@
+---
+- name: install remi repo for php 5.4
+  shell: /bin/rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm creates=/etc/yum.repos.d/remi.repo
+  tags: php-fpm
+
+- name: enable remi repo
+  ini_file: dest=/etc/yum.repos.d/remi.repo
+            section=remi
+            option=enabled
+            value=1
+
+- name: install php-fpm and its deps
+  yum: name={{item}} state=present
+  with_items:
+    - php
+    - php-fpm
+    - php-mbstring
+    - php-mcrypt
+    - php-pdo
+    - php-mysql
+    - php-xml
+  tags: php-fpm
+
+- name: backup default php configuration
+  shell: /bin/cp /etc/php.ini /etc/php.default.ini creates=/etc/php.default.ini
+  tags: php-fpm
+
+- name: configure php for development
+  ini_file: dest=/etc/php.ini
+            section=PHP
+            option=display_errors
+            value=On
+  when: app.env != "production"
+  notify: restart php-fpm
+  tags: php-fpm
+
+- name: backup default php-fpm configuration
+  shell: /bin/cp /etc/php-fpm.d/www.conf /etc/php-fpm.d/www.conf.default creates=/etc/php-fpm.d/www.conf.default
+  tags: php-fpm
+
+- name: change php-fpm to listen on socket
+  ini_file: dest=/etc/php-fpm.d/www.conf
+            section=www
+            option=listen
+            value=/var/run/php-fpm/php-fpm.sock
+  notify: restart php-fpm
+  tags: php-fpm
+
+- name: change php-fpm user
+  ini_file: dest=/etc/php-fpm.d/www.conf
+            section=www
+            option=user
+            value=nginx
+  notify: restart php-fpm
+  tags: php-fpm
+
+- name: change php-fpm group
+  ini_file: dest=/etc/php-fpm.d/www.conf
+            section=www
+            option=group
+            value=nginx
+  notify: restart php-fpm
+  tags: php-fpm
+
+- name: start php-fpm
+  service: name=php-fpm state=running
+  tags: php-fpm
