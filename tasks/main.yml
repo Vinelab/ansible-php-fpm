@@ -31,7 +31,8 @@
             option=display_errors
             value=On
   when: app.env != "production"
-  notify: restart php-fpm
+  notify:
+  - restart php-fpm
   tags: php-fpm
 
 - name: backup default php-fpm configuration
@@ -43,7 +44,8 @@
             section=www
             option=listen
             value=/var/run/php-fpm/php-fpm.sock
-  notify: restart php-fpm
+  notify:
+  - restart php-fpm
   tags: php-fpm
 
 - name: change php-fpm user
@@ -51,7 +53,8 @@
             section=www
             option=user
             value=nginx
-  notify: restart php-fpm
+  notify:
+  - restart php-fpm
   tags: php-fpm
 
 - name: change php-fpm group
@@ -59,7 +62,8 @@
             section=www
             option=group
             value=nginx
-  notify: restart php-fpm
+  notify:
+  - restart php-fpm
   tags: php-fpm
 
 - name: start php-fpm
