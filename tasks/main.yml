@@ -19,6 +19,7 @@
     - php-pdo
     - php-mysql
     - php-xml
+    - php-gd
   tags: php-fpm
 
 - name: backup default php configuration
