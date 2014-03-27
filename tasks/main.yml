@@ -3,11 +3,16 @@
   shell: /bin/rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm creates=/etc/yum.repos.d/remi.repo
   tags: php-fpm
 
+- name: install remi-mysql repo
+  shell: /bin/rpm -Uvh http://rpms.famillecollet.com/enterprise/6/test/x86_64/compat-mysql55-5.5.11-1.el6.remi.x86_64.rpm creates=/etc/yum.repos.d/remi.repo
+  tags: php-fpm
+
 - name: enable remi repo
   ini_file: dest=/etc/yum.repos.d/remi.repo
             section=remi
             option=enabled
             value=1
+
 
 - name: install php-fpm and its deps
   yum: name={{item}} state=present
