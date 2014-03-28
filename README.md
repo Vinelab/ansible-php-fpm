@@ -1,5 +1,5 @@
 # Ansible PHP-FPM
-Install PHP-FPM on Centos/Red Hat
+Install PHP-FPM on Centos/Red Hat with Ansible
 
 ## Installation
 Clone this repository inside your ```roles``` direcotry
@@ -15,4 +15,5 @@ will install the listed services from [remi repo](http://rpms.famillecollet.com)
 - php-pdo
 - php-mysql
 - php-xml
+- php-gd
 ```
