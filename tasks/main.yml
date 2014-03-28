@@ -1,10 +1,22 @@
 ---
-- name: install remi repo for php 5.4
-  shell: /bin/rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm creates=/etc/yum.repos.d/remi.repo
+- name: download remi release repo for php
+  get_url: url=http://rpms.famillecollet.com/enterprise/remi-release-6.rpm dest=/tmp/remi-release-6.rpm
+  tags: php-fpm
+
+- name: install remi repo
+  shell: /bin/rpm -Uvh /tmp/remi-release-6.rpm
+  register: remi_repo_result
+  failed_when: "'conflict' in remi_repo_result.stderr"
+  tags: php-fpm
+
+- name: download remi-mysql repo
+  get_url: url=http://rpms.famillecollet.com/enterprise/6/test/x86_64/compat-mysql55-5.5.11-1.el6.remi.x86_64.rpm dest=/tmp/compat-mysql5.5.11.remi.rpm
   tags: php-fpm
 
 - name: install remi-mysql repo
-  shell: /bin/rpm -Uvh http://rpms.famillecollet.com/enterprise/6/test/x86_64/compat-mysql55-5.5.11-1.el6.remi.x86_64.rpm creates=/etc/yum.repos.d/remi.repo
+  shell: /bin/rpm -Uvh /tmp/compat-mysql5.5.11.remi.rpm
+  register: remi_mysql_repo_result
+  failed_when: "'conflict' in remi_mysql_repo_result.stderr"
   tags: php-fpm
 
 - name: enable remi repo
