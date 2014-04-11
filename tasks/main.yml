@@ -85,5 +85,5 @@
   tags: php-fpm
 
 - name: start php-fpm
-  service: name=php-fpm state=running
+  service: name=php-fpm state=running enabled=yes
   tags: php-fpm
