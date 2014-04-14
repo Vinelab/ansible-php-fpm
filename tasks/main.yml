@@ -32,12 +32,22 @@
   shell: /bin/cp /etc/php.ini /etc/php.default.ini creates=/etc/php.default.ini
   tags: php-fpm
 
-- name: configure php for development
+- name: display php errors when not in production
   ini_file: dest=/etc/php.ini
             section=PHP
             option=display_errors
             value=On
-  when: app.env != "production"
+  when: env is defined and env != "production"
+  notify:
+  - restart php-fpm
+  tags: php-fpm
+
+- name: do not show php errors when in production
+  ini_file: dest=/etc/php.ini
+            section=PHP
+            option=display_errors
+            value=Off
+  when: env is defined and env == "production"
   notify:
   - restart php-fpm
   tags: php-fpm
