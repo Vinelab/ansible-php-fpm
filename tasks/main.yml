@@ -65,6 +65,15 @@
   - restart php-fpm
   tags: php-fpm
 
+- name: php-fpm listen mode should always be 0666
+  ini_file: dest=/etc/php-fpm.d/www.conf
+            section=www
+            option=listen.mode
+            value=0666
+  notify:
+  - restart php-fpm
+  tags: php-fpm
+
 - name: change php-fpm user
   ini_file: dest=/etc/php-fpm.d/www.conf
             section=www
